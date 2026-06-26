@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WM Sticker Heft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;
+  --paper:#f2e9d8;
+  --paper-dark:#e3d7bd;
+  --grass:#16352a;
+  --grass-2:#1f4a38;
+  --gold:#d4a93a;
+  --gold-light:#f0d98c;
+  --red:#c1272d;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--grass);
+  background-image:
+    radial-gradient(circle at 10% 0%, rgba(255,255,255,0.05), transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(255,255,255,0.04), transparent 40%);
+  color:var(--paper);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+}
+.mono{font-family:'Space Mono',monospace;}
+.display{font-family:'Anton',sans-serif; letter-spacing:0.03em;}
+
+/* ---------- NAV ---------- */
+.navbar{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding:10px 20px;
+  background:rgba(14,28,22,0.92);
+  backdrop-filter:blur(6px);
+  border-bottom:3px solid var(--gold);
+}
+.navbar .brand{display:flex; align-items:center; gap:10px;}
+.navbar .brand .crest{
+  width:34px;height:34px;border-radius:50%;
+  background:conic-gradient(var(--gold),var(--red),var(--gold-light),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px; flex-shrink:0;
+}
+.navbar h1{font-size:20px; margin:0; color:var(--gold-light);}
+.nav-stats{display:flex; gap:14px; align-items:center; font-size:13px;}
+.nav-progress{
+  width:140px; height:8px; border-radius:5px; background:rgba(255,255,255,0.15); overflow:hidden;
+}
+.nav-progress > div{height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); transition:width .4s ease;}
+.nav-stats span.count{color:var(--gold-light); font-weight:700;}
+@media (max-width:640px){ .navbar h1{font-size:16px;} .nav-stats{font-size:11px; gap:8px;} .nav-progress{width:80px;} }
+
+/* ---------- HERO / PACK ---------- */
+.hero{
+  text-align:center; padding:48px 20px 30px;
+}
+.hero .eyebrow{
+  font-family:'Space Mono',monospace; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--gold); font-size:12px; margin-bottom:10px;
+}
+.hero h2{
+  font-size:clamp(32px,7vw,64px); margin:0 0 8px; color:var(--paper);
+  text-shadow:0 4px 0 rgba(0,0,0,0.25);
+}
+.hero p.sub{color:rgba(242,233,216,0.7); max-width:480px; margin:0 auto 28px; font-size:14px;}
+
+.pack-zone{display:flex; flex-direction:column; align-items:center; gap:18px;}
+.pack{
+  width:170px; height:230px; position:relative; cursor:pointer;
+  perspective:800px;
+}
+.pack-half{
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  border-radius:10px;
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.12) 0 6px, transparent 6px 14px),
+    linear-gradient(160deg, var(--gold) 0%, #8a6b1f 40%, var(--gold) 70%, #8a6b1f 100%);
+  box-shadow:0 10px 25px rgba(0,0,0,0.45), inset 0 0 0 2px rgba(255,255,255,0.25);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:transform .55s cubic-bezier(.6,-0.2,.3,1.3), opacity .4s ease;
+  clip-path:polygon(0 0,100% 0,100% 92%,90% 100%,80% 92%,70% 100%,60% 92%,50% 100%,40% 92%,30% 100%,20% 92%,10% 100%,0 92%);
+}
+.pack-half .pack-title{color:var(--ink); font-family:'Anton',sans-serif; font-size:26px; text-align:center; line-height:1.05;}
+.pack-half .pack-sub{color:var(--ink); font-family:'Space Mono',monospace; font-size:11px; margin-top:6px; opacity:0.75;}
+.pack-half .star{position:absolute; font-size:20px; opacity:0.5;}
+.pack-half .star.s1{top:18px; left:16px;} .pack-half .star.s2{bottom:24px; right:18px;}
+.pack.ripping .pack-half{ }
+.pack.ripping .pack-half.left{transform:translateX(-130%) rotate(-18deg); opacity:0;}
+.pack.ripping .pack-half.right{transform:translateX(130%) rotate(18deg); opacity:0;}
+.pack:not(.ripping):hover .pack-half{transform:scale(1.03);}
+.pack-hint{font-size:12px; color:rgba(242,233,216,0.6);}
+.btn{
+  font-family:'Space Mono',monospace; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+  border:none; border-radius:6px; padding:12px 22px; cursor:pointer; font-size:13px;
+  background:var(--gold); color:var(--ink); transition:transform .15s ease, background .2s ease;
+}
+.btn:hover{background:var(--gold-light); transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
+.btn.secondary{background:transparent; color:var(--gold-light); border:1.5px solid var(--gold-light);}
+.btn.secondary:hover{background:rgba(212,169,58,0.15);}
+.btn:disabled{opacity:0.35; cursor:not-allowed; transform:none;}
+.btn.danger{background:var(--red); color:#fff;}
+
+/* ---------- TABS ---------- */
+.tabs-wrap{
+  max-width:1080px; margin:40px auto 0; padding:0 20px;
+}
+.tabs{
+  display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; scrollbar-width:thin;
+}
+.tab{
+  flex-shrink:0; font-family:'Space Mono',monospace; font-size:12px; font-weight:700;
+  padding:8px 14px; border-radius:6px 6px 0 0; cursor:pointer;
+  background:rgba(255,255,255,0.06); color:rgba(242,233,216,0.65); border-bottom:3px solid transparent;
+}
+.tab.active{background:var(--paper); color:var(--ink); border-bottom:3px solid var(--red);}
+
+/* ---------- ALBUM ---------- */
+.album-page{
+  max-width:1080px; margin:0 auto 60px; padding:26px 22px 36px;
+  background:var(--paper); border-radius:4px 14px 14px 4px;
+  box-shadow:0 18px 40px rgba(0,0,0,0.35);
+  color:var(--ink);
+  background-image:radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
+  background-size:6px 6px;
+}
+.album-page h3{
+  font-family:'Anton',sans-serif; font-size:22px; margin:0 0 4px; color:var(--grass);
+}
+.album-page .group-sub{font-size:12px; color:#6b6048; margin-bottom:18px; font-family:'Space Mono',monospace;}
+.team-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+@media (max-width:680px){ .team-grid{grid-template-columns:1fr;} }
+.team-card{
+  border:2px solid var(--paper-dark); border-radius:8px; padding:12px;
+  display:flex; gap:10px; align-items:flex-start; background:rgba(255,255,255,0.4);
+}
+.slot{
+  border-radius:6px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:relative; font-family:'Space Mono',monospace; flex-shrink:0;
+  border:2px dashed #b8ab87; color:#9b8e6e;
+}
+.slot.filled{border-style:solid; color:#fff; box-shadow:0 3px 8px rgba(0,0,0,0.25);}
+.slot .num{position:absolute; top:2px; left:3px; font-size:8px; opacity:0.8;}
+.slot.badge-slot{width:62px; height:62px; font-size:24px;}
+.slot.player-slot{width:42px; height:54px; font-size:11px;}
+.team-meta{display:flex; flex-direction:column; gap:6px; flex:1; min-width:0;}
+.team-name{font-weight:700; font-size:13px;}
+.player-row{display:flex; gap:6px; flex-wrap:wrap;}
+.jersey{
+  width:18px; height:18px; border-radius:4px; background:rgba(0,0,0,0.5);
+  display:flex; align-items:center; justify-content:center; font-size:9px; color:#fff; font-weight:700;
+}
+
+.specials-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+@media (max-width:680px){ .specials-grid{grid-template-columns:repeat(2,1fr);} }
+.special-card{
+  border-radius:8px; padding:14px 8px; text-align:center; border:2px dashed #b8ab87; color:#9b8e6e;
+  display:flex; flex-direction:column; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:11px;
+}
+.special-card.filled{border-style:solid; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.3);}
+.special-card .ic{font-size:26px;}
+
+/* ---------- STATS PANEL ---------- */
+.stats-panel{
+  max-width:1080px; margin:0 auto 60px; padding:20px 22px;
+  background:rgba(255,255,255,0.06); border-radius:10px; border:1px solid rgba(212,169,58,0.3);
+  display:flex; flex-wrap:wrap; gap:24px; align-items:center; justify-content:space-between;
+}
+.stat-block{text-align:center;}
+.stat-block .v{font-family:'Anton',sans-serif; font-size:26px; color:var(--gold-light);}
+.stat-block .l{font-size:10px; font-family:'Space Mono',monospace; text-transform:uppercase; color:rgba(242,233,216,0.6);}
+.trade-block{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+
+footer.note{
+  text-align:center; font-size:11px; color:rgba(242,233,216,0.4); padding:0 20px 50px; font-family:'Space Mono',monospace;
+}
+
+/* ---------- MODAL: PACK REVEAL ---------- */
+.overlay{
+  position:fixed; inset:0; background:rgba(8,16,12,0.88); z-index:200;
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+.overlay.open{display:flex;}
+.reveal-box{
+  max-width:760px; width:100%; text-align:center;
+}
+.reveal-box h3{font-family:'Anton',sans-serif; color:var(--gold-light); font-size:24px; margin-bottom:18px;}
+.reveal-cards{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:24px;}
+.rcard{
+  width:108px; height:150px; perspective:600px; cursor:default;
+}
+.rcard-inner{
+  width:100%; height:100%; position:relative; transform-style:preserve-3d;
+  transition:transform .6s cubic-bezier(.4,0,.2,1);
+}
+.rcard.show .rcard-inner{transform:rotateY(180deg);}
+.rcard-face{
+  position:absolute; inset:0; border-radius:8px; backface-visibility:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:'Space Mono',monospace;
+}
+.rcard-face.back{
+  background:repeating-linear-gradient(135deg, rgba(255,255,255,0.1) 0 5px, transparent 5px 12px), linear-gradient(160deg,var(--gold),#8a6b1f);
+  font-size:24px; color:rgba(0,0,0,0.4);
+}
+.rcard-face.front{
+  transform:rotateY(180deg); color:#fff; padding:8px; text-align:center; gap:4px;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,0.3);
+}
+.rcard-face.front .ic{font-size:26px;}
+.rcard-face.front .nm{font-size:10px; font-weight:700; line-height:1.15;}
+.rcard-face.front .tag{
+  margin-top:4px; font-size:8px; padding:2px 6px; border-radius:10px; font-weight:700;
+}
+.tag.neu{background:var(--gold-light); color:#3a2e08;}
+.tag.dup{background:rgba(0,0,0,0.35); color:#fff;}
+
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--gold-light); color:#3a2e08; padding:10px 18px; border-radius:8px;
+  font-family:'Space Mono',monospace; font-size:12px; font-weight:700; opacity:0; transition:all .35s ease;
+  z-index:300; pointer-events:none;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="brand">
+    <div class="crest">⚽</div>
+    <h1 class="display">WM STICKER HEFT</h1>
+  </div>
+  <div class="nav-stats">
+    <span><span class="count" id="navCount">0</span>/<span id="navTotal">248</span></span>
+    <div class="nav-progress"><div id="navBar" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Fan-Edition · Sammelheft</div>
+  <h2>Reiß ein Päckchen auf.</h2>
+  <p class="sub">Jedes Päckchen enthält 5 Sticker. Sammle alle 248, klebe sie ins Heft und tausche Dubletten gegen neue Motive.</p>
+  <div class="pack-zone">
+    <div class="pack" id="pack" onclick="openPack()">
+      <div class="pack-half left">
+        <span class="star s1">★</span>
+        <div class="pack-title">WM<br>2026</div>
+        <div class="pack-sub">5 STICKER</div>
+        <span class="star s2">★</span>
+      </div>
+      <div class="pack-half right" style="opacity:0;"></div>
+    </div>
+    <div class="pack-hint">Klick zum Aufreißen</div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div id="albumRoot"></div>
+
+<div class="stats-panel">
+  <div style="display:flex; gap:24px; flex-wrap:wrap;">
+    <div class="stat-block"><div class="v" id="statUnique">0</div><div class="l">Eigene Motive</div></div>
+    <div class="stat-block"><div class="v" id="statDup">0</div><div class="l">Dubletten</div></div>
+    <div class="stat-block"><div class="v" id="statPacks">0</div><div class="l">Päckchen</div></div>
+  </div>
+  <div class="trade-block">
+    <span style="font-size:12px; color:rgba(242,233,216,0.7);">3 Dubletten → 1 neues Motiv</span>
+    <button class="btn secondary" id="tradeBtn" onclick="tradeDuplicates()">Tauschen</button>
+    <button class="btn danger" onclick="resetCollection()">Zurücksetzen</button>
+  </div>
+</div>
+
+<footer class="note">Fan-Edition mit Beispiel-Mannschaften — keine offizielle Zuordnung der FIFA. Spieler-Sticker sind abstrakt dargestellt.</footer>
+
+<div class="overlay" id="overlay">
+  <div class="reveal-box">
+    <h3 id="revealHeading">Dein Päckchen</h3>
+    <div class="reveal-cards" id="revealCards"></div>
+    <button class="btn" onclick="closeReveal()">Ins Heft einkleben</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const TEAMS = [
+  ["Deutschland","🇩🇪","#2d2d2d"],["Argentinien","🇦🇷","#5ba3d0"],["Frankreich","🇫🇷","#1c39bb"],["Brasilien","🇧🇷","#e8b400"],
+  ["England","🏴","#c8102e"],["Spanien","🇪🇸","#c60b1e"],["Portugal","🇵🇹","#046a38"],["Niederlande","🇳🇱","#ff6600"],
+  ["Italien","🇮🇹","#0066cc"],["Belgien","🇧🇪","#ed2939"],["Kroatien","🇭🇷","#e10600"],["Marokko","🇲🇦","#c1272d"],
+  ["Japan","🇯🇵","#0033a0"],["Südkorea","🇰🇷","#c60c30"],["USA","🇺🇸","#3c3b6e"],["Mexiko","🇲🇽","#006847"],
+  ["Kanada","🇨🇦","#d52b1e"],["Senegal","🇸🇳","#00853f"],["Ghana","🇬🇭","#ce1126"],["Nigeria","🇳🇬","#008751"],
+  ["Algerien","🇩🇿","#006233"],["Tunesien","🇹🇳","#e70013"],["Ägypten","🇪🇬","#c8102e"],["Kamerun","🇨🇲","#007a33"],
+  ["Schweiz","🇨🇭","#d52b1e"],["Österreich","🇦🇹","#ed2939"],["Polen","🇵🇱","#dc143c"],["Schweden","🇸🇪","#006aa7"],
+  ["Dänemark","🇩🇰","#c60c30"],["Norwegen","🇳🇴","#ba0c2f"],["Serbien","🇷🇸","#c6363c"],["Ukraine","🇺🇦","#005bbb"],
+  ["Türkei","🇹🇷","#e30a17"],["Griechenland","🇬🇷","#0d5eaf"],["Uruguay","🇺🇾","#4a9fd8"],["Kolumbien","🇨🇴","#e8b400"],
+  ["Chile","🇨🇱","#d52b1e"],["Peru","🇵🇪","#d91023"],["Ecuador","🇪🇨","#ffd100"],["Paraguay","🇵🇾","#0038a8"],
+  ["Australien","🇦🇺","#00843d"],["Saudi-Arabien","🇸🇦","#006c35"],["Iran","🇮🇷","#239f40"],["Katar","🇶🇦","#8a1538"],
+  ["Costa Rica","🇨🇷","#002b7f"],["Jamaika","🇯🇲","#cfa500"],["Neuseeland","🇳🇿","#111111"],["Panama","🇵🇦","#d21034"]
+].map(([name,flag,color])=>({name,flag,color}));
+
+const SPECIALS = [
+  {label:"Pokal",icon:"🏆",color:"#b8860b"},
+  {label:"Maskottchen",icon:"🦁",color:"#a6473b"},
+  {label:"Eröffnungsstadion",icon:"🏟️",color:"#2f6b4f"},
+  {label:"Finalstadion",icon:"🏟️",color:"#2f6b4f"},
+  {label:"Stadion Nord",icon:"🏟️",color:"#3a5a7d"},
+  {label:"Stadion Süd",icon:"🏟️",color:"#3a5a7d"},
+  {label:"Stadion Ost",icon:"🏟️",color:"#3a5a7d"},
+  {label:"Stadion West",icon:"🏟️",color:"#3a5a7d"},
+];
+
+const GROUP_LETTERS = "ABCDEFGHIJKL".split("");
+
+function buildStickers(){
+  const list = [];
+  let n = 1;
+  TEAMS.forEach((t, ti)=>{
+    list.push({id:`t${ti}-badge`, num:n++, type:"badge", teamIdx:ti, label:"Wappen"});
+    for(let p=1;p<=4;p++){
+      list.push({id:`t${ti}-p${p}`, num:n++, type:"player", teamIdx:ti, label:`Spieler ${p}`, jersey:p});
+    }
+  });
+  SPECIALS.forEach((s, si)=>{
+    list.push({id:`sp${si}`, num:n++, type:"special", label:s.label, icon:s.icon, color:s.color, rare:true});
+  });
+  return list;
+}
+const STICKERS = buildStickers();
+const STICKER_MAP = Object.fromEntries(STICKERS.map(s=>[s.id,s]));
+const TOTAL = STICKERS.length;
+document.getElementById("navTotal").textContent = TOTAL;
+
+const WEIGHTED = [];
+STICKERS.forEach(s=>{ const w = s.rare ? 1 : 12; for(let i=0;i<w;i++) WEIGHTED.push(s.id); });
+function pickRandom(){ return WEIGHTED[Math.floor(Math.random()*WEIGHTED.length)]; }
+
+/* ---------------- STATE ---------------- */
+let collection = {};
+let packsOpened = 0;
+let activeTab = 0; // 0..11 groups, 12 = specials
+
+async function loadState(){
+  try{
+    const res = await window.storage.get("wm-collection-v1");
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      collection = parsed.collection || {};
+      packsOpened = parsed.packsOpened || 0;
+    }
+  }catch(e){ collection = {}; packsOpened = 0; }
+}
+async function saveState(){
+  try{ await window.storage.set("wm-collection-v1", JSON.stringify({collection, packsOpened})); }
+  catch(e){ console.error("Speichern fehlgeschlagen", e); }
+}
+
+/* ---------------- RENDER: TABS ---------------- */
+function renderTabs(){
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  GROUP_LETTERS.forEach((letter, i)=>{
+    const d = document.createElement("div");
+    d.className = "tab" + (activeTab===i ? " active" : "");
+    d.textContent = "Gruppe " + letter;
+    d.onclick = ()=>{ activeTab = i; renderAll(); };
+    tabs.appendChild(d);
+  });
+  const sp = document.createElement("div");
+  sp.className = "tab" + (activeTab===12 ? " active" : "");
+  sp.textContent = "★ Sondermotive";
+  sp.onclick = ()=>{ activeTab = 12; renderAll(); };
+  tabs.appendChild(sp);
+}
+
+/* ---------------- RENDER: ALBUM ---------------- */
+function slotHTML(sticker, sizeClass, displayContent){
+  const count = collection[sticker.id] || 0;
+  const filled = count > 0;
+  const bg = filled ? (sticker.color || "#888") : "transparent";
+  return `<div class="slot ${sizeClass} ${filled?'filled':''}" style="background:${bg}" title="${sticker.label} · Nr. ${String(sticker.num).padStart(3,'0')}">
+    <span class="num mono">${String(sticker.num).padStart(3,'0')}</span>
+    ${filled ? displayContent : '<span style="font-size:18px;">?</span>'}
+    ${count>1 ? `<span style="position:absolute;bottom:1px;right:2px;font-size:8px;background:rgba(0,0,0,0.45);padding:1px 3px;border-radius:4px;">x${count}</span>` : ''}
+  </div>`;
+}
+
+function renderAlbum(){
+  const root = document.getElementById("albumRoot");
+  if(activeTab === 12){
+    let html = `<div class="album-page"><h3>Sondermotive</h3><div class="group-sub">POKAL · MASKOTTCHEN · STADIEN</div><div class="specials-grid">`;
+    SPECIALS.forEach((s,si)=>{
+      const sticker = STICKER_MAP["sp"+si];
+      const count = collection[sticker.id]||0;
+      const filled = count>0;
+      html += `<div class="special-card ${filled?'filled':''}" style="background:${filled?s.color:'transparent'}">
+        <div class="ic">${filled ? s.icon : '?'}</div>
+        <div>${s.label}</div>
+        <div class="mono" style="opacity:0.6;">Nr. ${String(sticker.num).padStart(3,'0')}${count>1?` · x${count}`:''}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+    root.innerHTML = html;
+    return;
+  }
+  const groupTeams = TEAMS.slice(activeTab*4, activeTab*4+4);
+  let html = `<div class="album-page"><h3>Gruppe ${GROUP_LETTERS[activeTab]}</h3><div class="group-sub">4 MANNSCHAFTEN · 20 STICKER</div><div class="team-grid">`;
+  groupTeams.forEach((team, localIdx)=>{
+    const ti = activeTab*4 + localIdx;
+    const badgeSticker = STICKER_MAP[`t${ti}-badge`];
+    const badgeContent = `<span>${team.flag}</span>`;
+    html += `<div class="team-card">
+      ${slotHTML(badgeSticker,"badge-slot",badgeContent)}
+      <div class="team-meta">
+        <div class="team-name">${team.flag} ${team.name}</div>
+        <div class="player-row">`;
+    for(let p=1;p<=4;p++){
+      const ps = STICKER_MAP[`t${ti}-p${p}`];
+      const count = collection[ps.id]||0;
+      const filled = count>0;
+      html += `<div class="slot player-slot ${filled?'filled':''}" style="background:${filled?team.color:'transparent'}" title="Spieler ${p} · Nr. ${String(ps.num).padStart(3,'0')}">
+        <span class="num mono">${String(ps.num).padStart(3,'0')}</span>
+        ${filled ? `<div class="jersey" style="background:rgba(255,255,255,0.25)">${p}</div>` : '<span style="font-size:13px;">?</span>'}
+      </div>`;
+    }
+    html += `</div></div></div>`;
+  });
+  html += `</div></div>`;
+  root.innerHTML = html;
+}
+
+function renderStats(){
+  const uniqueCount = Object.values(collection).filter(c=>c>0).length;
+  const dupCount = Object.values(collection).reduce((acc,c)=> acc + Math.max(c-1,0), 0);
+  document.getElementById("navCount").textContent = uniqueCount;
+  document.getElementById("navBar").style.width = (uniqueCount/TOTAL*100)+"%";
+  document.getElementById("statUnique").textContent = uniqueCount + "/" + TOTAL;
+  document.getElementById("statDup").textContent = dupCount;
+  document.getElementById("statPacks").textContent = packsOpened;
+  const tradeBtn = document.getElementById("tradeBtn");
+  const missing = TOTAL - uniqueCount;
+  tradeBtn.disabled = dupCount < 3 || missing === 0;
+  tradeBtn.title = missing===0 ? "Album bereits komplett!" : "";
+}
+
+function renderAll(){ renderTabs(); renderAlbum(); renderStats(); }
+
+/* ---------------- PACK OPENING ---------------- */
+let isOpening = false;
+function openPack(){
+  if(isOpening) return;
+  isOpening = true;
+  const pack = document.getElementById("pack");
+  pack.classList.add("ripping");
+  setTimeout(()=>{
+    const drawn = [];
+    for(let i=0;i<5;i++){
+      const id = pickRandom();
+      const wasNew = !(collection[id] > 0);
+      collection[id] = (collection[id]||0) + 1;
+      drawn.push({id, wasNew, count: collection[id]});
+    }
+    packsOpened++;
+    saveState();
+    showReveal(drawn);
+    pack.classList.remove("ripping");
+    isOpening = false;
+  }, 600);
+}
+
+function showReveal(drawn){
+  const overlay = document.getElementById("overlay");
+  const cardsRoot = document.getElementById("revealCards");
+  cardsRoot.innerHTML = "";
+  drawn.forEach((d, idx)=>{
+    const sticker = STICKER_MAP[d.id];
+    const isTeam = sticker.type !== "special";
+    const team = isTeam ? TEAMS[sticker.teamIdx] : null;
+    const color = isTeam ? team.color : sticker.color;
+    const icon = sticker.type === "badge" ? team.flag : sticker.type === "player" ? sticker.jersey : sticker.icon;
+    const name = isTeam ? (sticker.type==="badge" ? team.name : `${team.name} · ${sticker.label}`) : sticker.label;
+    const card = document.createElement("div");
+    card.className = "rcard";
+    card.innerHTML = `<div class="rcard-inner">
+      <div class="rcard-face back">?</div>
+      <div class="rcard-face front" style="background:${color}">
+        <div class="ic">${sticker.type==="player" ? "🎽" : icon}</div>
+        <div class="nm">${name}</div>
+        <div class="tag ${d.wasNew?'neu':'dup'}">${d.wasNew?'NEU':'DUBLETTE x'+d.count}</div>
+      </div>
+    </div>`;
+    cardsRoot.appendChild(card);
+    setTimeout(()=> card.classList.add("show"), 250 + idx*350);
+  });
+  overlay.classList.add("open");
+}
+
+function closeReveal(){
+  document.getElementById("overlay").classList.remove("open");
+  renderAll();
+}
+
+/* ---------------- TRADE ---------------- */
+function tradeDuplicates(){
+  let needed = 3;
+  const dupEntries = Object.entries(collection).filter(([id,c])=>c>1).sort((a,b)=>b[1]-a[1]);
+  for(const [id, count] of dupEntries){
+    if(needed<=0) break;
+    const removable = Math.min(count-1, needed);
+    collection[id] -= removable;
+    needed -= removable;
+  }
+  const missingIds = STICKERS.map(s=>s.id).filter(id=> !(collection[id]>0));
+  if(missingIds.length>0){
+    const newId = missingIds[Math.floor(Math.random()*missingIds.length)];
+    collection[newId] = 1;
+    const s = STICKER_MAP[newId];
+    showToast(`Eingetauscht: ${s.label} (Nr. ${String(s.num).padStart(3,'0')})!`);
+  }
+  saveState();
+  renderAll();
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"), 2400);
+}
+
+/* ---------------- RESET ---------------- */
+function resetCollection(){
+  if(!confirm("Wirklich das ganze Sammelheft zurücksetzen? Das kann nicht rückgängig gemacht werden.")) return;
+  collection = {};
+  packsOpened = 0;
+  saveState();
+  renderAll();
+}
+
+/* ---------------- INIT ---------------- */
+(async function init(){
+  await loadState();
+  renderAll();
+})();
+</script>
+</body>
+</html>
